@@ -46,8 +46,12 @@ export function CircularProgress({
 
   const rotation = useRef(new Animated.Value(0)).current;
 
-  const strokeWidth = thickness ?? Math.max(2, Math.round(size / 10));
-  const radius = (size - strokeWidth) / 2;
+  const snappedSize = Math.max(1, Math.round(size));
+  const strokeWidth = Math.max(
+    1,
+    Math.round(thickness ?? Math.max(2, Math.round(snappedSize / 10))),
+  );
+  const radius = (snappedSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const normalizedValue = clamp(value, 0, 100);
   const dashOffset = circumference * (1 - normalizedValue / 100);
@@ -93,21 +97,21 @@ export function CircularProgress({
       accessibilityRole="progressbar"
       accessibilityLabel={accessibilityLabel}
       accessibilityValue={variant === 'determinate' ? { min: 0, max: 100, now: Math.round(normalizedValue) } : undefined}
-      style={[styles.container, { width: size, height: size }, style]}
+      style={[styles.container, { width: snappedSize, height: snappedSize }, style]}
     >
       {variant === 'determinate' ? (
-        <Svg width={size} height={size}>
+        <Svg width={snappedSize} height={snappedSize}>
           <Circle
-            cx={size / 2}
-            cy={size / 2}
+            cx={snappedSize / 2}
+            cy={snappedSize / 2}
             r={radius}
             stroke={resolvedTrackColor}
             strokeWidth={strokeWidth}
             fill="transparent"
           />
           <Circle
-            cx={size / 2}
-            cy={size / 2}
+            cx={snappedSize / 2}
+            cy={snappedSize / 2}
             r={radius}
             stroke={resolvedColor}
             strokeWidth={strokeWidth}
@@ -115,30 +119,30 @@ export function CircularProgress({
             strokeLinecap="round"
             strokeDasharray={`${circumference} ${circumference}`}
             strokeDashoffset={dashOffset}
-            transform={`rotate(-90 ${size / 2} ${size / 2})`}
+            transform={`rotate(-90 ${snappedSize / 2} ${snappedSize / 2})`}
           />
         </Svg>
       ) : (
         <Animated.View style={[styles.indeterminateContainer, animatedStyle]}>
-          <Svg width={size} height={size}>
+          <Svg width={snappedSize} height={snappedSize}>
             <Circle
-              cx={size / 2}
-              cy={size / 2}
+              cx={snappedSize / 2}
+              cy={snappedSize / 2}
               r={radius}
               stroke={resolvedTrackColor}
               strokeWidth={strokeWidth}
               fill="transparent"
             />
             <Circle
-              cx={size / 2}
-              cy={size / 2}
+              cx={snappedSize / 2}
+              cy={snappedSize / 2}
               r={radius}
               stroke={resolvedColor}
               strokeWidth={strokeWidth}
               fill="transparent"
               strokeLinecap="round"
               strokeDasharray={`${circumference * 0.25} ${circumference}`}
-              transform={`rotate(-90 ${size / 2} ${size / 2})`}
+              transform={`rotate(-90 ${snappedSize / 2} ${snappedSize / 2})`}
             />
           </Svg>
         </Animated.View>

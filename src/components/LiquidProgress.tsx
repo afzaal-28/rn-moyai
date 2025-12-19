@@ -55,17 +55,21 @@ export function LiquidProgress({
 
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
 
+  const snappedWidth = Math.max(1, Math.round(width));
+  const snappedHeight = Math.max(1, Math.round(height));
+  const snappedInset = Math.max(0, Math.round(inset));
+
   const fillAnim = useRef(new Animated.Value(0)).current;
   const shimmerAnim = useRef(new Animated.Value(0)).current;
 
   const contentWidth = useMemo(() => {
-    const base = measuredWidth ?? width;
-    return Math.max(0, base - inset * 2);
-  }, [inset, measuredWidth, width]);
+    const base = measuredWidth ?? snappedWidth;
+    return Math.max(0, base - snappedInset * 2);
+  }, [measuredWidth, snappedInset, snappedWidth]);
 
-  const contentHeight = Math.max(0, height - inset * 2);
-  const radius = borderRadius ?? height / 2;
-  const fillRadius = Math.max(0, radius - inset);
+  const contentHeight = Math.max(0, snappedHeight - snappedInset * 2);
+  const radius = Math.max(0, Math.round(borderRadius ?? snappedHeight / 2));
+  const fillRadius = Math.max(0, radius - snappedInset);
 
   useEffect(() => {
     if (variant === 'determinate') {
@@ -113,7 +117,7 @@ export function LiquidProgress({
 
   const fillWidth = fillAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [Math.max(0, inset * 2), contentWidth],
+    outputRange: [Math.max(0, snappedInset * 2), contentWidth],
   });
 
   const shimmerStyle = useMemo(
@@ -143,8 +147,8 @@ export function LiquidProgress({
         style={[
           styles.track,
           {
-            width,
-            height,
+            width: snappedWidth,
+            height: snappedHeight,
             borderRadius: radius,
             backgroundColor: resolvedTrackColor,
           },
@@ -154,8 +158,8 @@ export function LiquidProgress({
           style={[
             styles.fillContainer,
             {
-              left: inset,
-              top: inset,
+              left: snappedInset,
+              top: snappedInset,
               height: contentHeight,
               borderRadius: fillRadius,
               width: fillWidth,
