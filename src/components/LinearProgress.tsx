@@ -63,7 +63,11 @@ export function LinearProgress({
     return clamp01(valueBuffer);
   }, [valueBuffer]);
 
-  const radius = borderRadius ?? height / 2;
+  const snappedHeight = Math.max(1, Math.round(height));
+  const radius = Math.max(
+    0,
+    Math.round(borderRadius ?? snappedHeight / 2),
+  );
 
   const onLayout = (e: LayoutChangeEvent) => {
     measuredWidth.current = e.nativeEvent.layout.width;
@@ -122,7 +126,7 @@ export function LinearProgress({
       style={[
         styles.track,
         {
-          height,
+          height: snappedHeight,
           width,
           borderRadius: radius,
           backgroundColor: resolvedTrackColor,
