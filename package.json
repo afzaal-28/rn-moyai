@@ -29,6 +29,8 @@
     "typescript": "^5.4.0"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-fetch": "^3.3.2",
     "react-native-linear-gradient": "^2.8.3"
   }
 }
